@@ -70,13 +70,22 @@ fileSize:{color.white}{filesize}MB {color.white}
      confirm=user_input.useruput(f"Convert {applicationStore.selectedBook} to audio? (y/yes,n/no)")
      if confirm=="y" or confirm=="yes":
         # applicationStore.selectedBook=selectBook
+        NumOfpagesToAudio=user_input.useruput(f"Enter number of pages[user * to convert all]")
+        if NumOfpages=='*':
+            pass
+        else:
+            NumOfpagesToAudio=user_input.useruput(f"Enter start page")
+        
+        
+        
+        
         pass
      else:
         userChooseFile()
      
      
      
-     
+
     
     
     

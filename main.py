@@ -3,6 +3,7 @@ from gtts import gTTS
 from assets.leonResources import color,custom_output,user_input
 import os
 from PyPDF2 import PdfReader
+import time
 
 class applicationStore:
     DocumentName=""
@@ -39,21 +40,56 @@ def userChooseFile():
     try:
         selectBook=applicationStore.AvailableFiles[int(bookSelected)]
         custom_output.info(f"Selected book: {color.white}{selectBook}",color.green)
-        applicationStore.selectedBook=bookSelected
+        applicationStore.selectedBook=selectBook
+        
+            
+            
+        
     except:
         custom_output.error("invalid choose")
+
+def bookInfo():
+     bookSelected=applicationStore.selectedBook
+     temp = open("./"+bookSelected, 'rb')
+     PDF_read = PdfReader(temp)
+     NumOfpages=len(PDF_read.pages)
+     first_page = PDF_read.getPage(0)
+     text=first_page.extractText()
+     firstLine=text.partition("\n")[0]
+     fileCreationDate=time.ctime(os.path.getctime("./"+bookSelected))
+     filesize=os.stat("./"+bookSelected)
+     filesize=filesize.st_size/(1024*1024)
+     filesize=round(filesize,3)
+     summuryInfo=f'''
+No of pages: {color.white}{NumOfpages}{color.green}
+Page firstLine: {color.white}{firstLine}{color.green}
+fileCreation: {color.white}{fileCreationDate}{color.green}
+fileSize:{color.white}{filesize}MB {color.white}
+     '''
+     custom_output.info(summuryInfo,color.green)
+     confirm=user_input.useruput(f"Convert {applicationStore.selectedBook} to audio? (y/yes,n/no)")
+     if confirm=="y" or confirm=="yes":
+        # applicationStore.selectedBook=selectBook
+        pass
+     else:
+        userChooseFile()
+     
+     
+     
+     
+    
+    
+    
 
 def main():
     listFiles()
     userChooseFile()
+    bookInfo()    
 main()
 
     
 
-# temp = open('./SHE HACKS II.pdf', 'rb')
-# PDF_read = PdfReader(temp)
-# first_page = PDF_read.getPage(0)
-# text=first_page.extractText()
+# #
 # language = 'en'
 # myobj = gTTS(text=text, lang=language, slow=False)
 # myobj.save("welcome.mp3")

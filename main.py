@@ -10,6 +10,7 @@ class applicationStore:
     language='en' #default
     supportedDocuments=['.pdf','.docx']
     AvailableFiles=[]
+    selectedBook=""
     
 def listFiles():
     path=os.getcwd()
@@ -21,20 +22,31 @@ def listFiles():
     
     # display files
     documents=applicationStore.AvailableFiles
-    print(documents)
     for num in range(0,len(documents),2):
-        print(num)
         if num-2==-2:
             pass
         else:
             currentDoc=documents[num-2]
             nextNum=num-1
             nextDoc=documents[nextNum]
-            custom_output.info(f"{num-2}{currentDoc} {nextNum}{nextDoc}",color.red)
-        
-        
-    
-listFiles()
+            custom_output.info(f"{num-2} {currentDoc} \t\t {nextNum} {nextDoc}",color.red)
+
+def userChooseFile():
+    bookSelected=user_input.useruput("Enter book to conver to audio: ")    
+    check=str.isnumeric(bookSelected)
+    if bool(check)==False:
+        custom_output.error("Invalid choice")
+    try:
+        selectBook=applicationStore.AvailableFiles[int(bookSelected)]
+        custom_output.info(f"Selected book: {color.white}{selectBook}",color.green)
+        applicationStore.selectedBook=bookSelected
+    except:
+        custom_output.error("invalid choose")
+
+def main():
+    listFiles()
+    userChooseFile()
+main()
 
     
 

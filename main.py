@@ -1,7 +1,7 @@
 
 from dataclasses import replace
 from gtts import gTTS
-from assets.leonResources import color,custom_output,user_input
+from assets.leonResources import color,custom_output,user_input,banner
 import os
 from PyPDF2 import PdfReader
 import time
@@ -18,8 +18,7 @@ class applicationStore:
     selectedBook=""
     pageContents=""
     lines=""
-
-
+banner.leonBanner()
 for i in range(0,70):
     applicationStore.lines+="-"
 

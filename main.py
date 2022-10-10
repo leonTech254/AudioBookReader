@@ -5,6 +5,9 @@ import os
 from PyPDF2 import PdfReader
 import time
 
+    
+
+
 class applicationStore:
     DocumentName=""
     NarratorSpeed=""
@@ -13,7 +16,12 @@ class applicationStore:
     AvailableFiles=[]
     selectedBook=""
     pageContents=""
-    
+    lines=""
+
+
+for i in range(0,70):
+    applicationStore.lines+="-"
+
 def listFiles():
     path=os.getcwd()
     for (root, dirs, file) in os.walk(path):
@@ -24,6 +32,8 @@ def listFiles():
     
     # display files
     documents=applicationStore.AvailableFiles
+    custom_output.info("AVAILABLE BOOK ",color.yellow)
+    custom_output.info(f"{applicationStore.lines}\n",color.blue)
     for num in range(0,len(documents),2):
         if num-2==-2:
             pass
@@ -36,18 +46,13 @@ def listFiles():
             # custom_output.info(f"{num-2} {currentDoc} \t\t {nextNum} {nextDoc}",color.red)
 
 def userChooseFile():
-    bookSelected=user_input.useruput("Enter book to conver to audio: ")    
+    bookSelected=user_input.useruput("\tEnter book to conver to audio: ")    
     check=str.isnumeric(bookSelected)
     if bool(check)==False:
         custom_output.error("Invalid choice")
     try:
         selectBook=applicationStore.AvailableFiles[int(bookSelected)]
-        custom_output.info(f"Selected book: {color.white}{selectBook}",color.green)
         applicationStore.selectedBook=selectBook
-        
-            
-            
-        
     except:
         custom_output.error("invalid choose")
 
@@ -64,13 +69,16 @@ def bookInfo():
      filesize=filesize.st_size/(1024*1024)
      filesize=round(filesize,3)
      summuryInfo=f'''
-No of pages: {color.white}{NumOfpages}{color.green}
-Page firstLine: {color.white}{firstLine}{color.green}
-fileCreation: {color.white}{fileCreationDate}{color.green}
+\t\tSelected book: {color.white}{bookSelected}{color.green}
+\t\tNo of pages: {color.white}{NumOfpages}{color.green}
+\t\tPage firstLine: {color.white}{firstLine}{color.green}
+\t\tfileCreation: {color.white}{fileCreationDate}{color.green}
 
-fileSize:{color.white}{filesize}MB {color.white}
+\t\tfileSize: {color.white}{filesize}MB {color.white}
      '''
      custom_output.info(summuryInfo,color.green)
+     custom_output.info(f"{applicationStore.lines}\n",color.blue)
+     
      confirm=user_input.useruput(f"Convert {applicationStore.selectedBook} to audio? (y/yes,n/no)")
      if confirm=="y" or confirm=="yes":
         # applicationStore.selectedBook=selectBook
@@ -82,12 +90,10 @@ fileSize:{color.white}{filesize}MB {color.white}
                 custom_output.error("Invalid input")
                 bookInfo()
             startPage= int(user_input.useruput(f"Enter start page"))
-            for i in range(int(startPage),int(NumOfpagesToAudio)):
+            for i in range(int(startPage),int(NumOfpagesToAudio)+int(startPage)): 
                 content = PDF_read.getPage(i)
                 text=content.extractText()
                 applicationStore.pageContents+=text
-        
-        pass
      else:
         userChooseFile()
 
@@ -112,7 +118,9 @@ def convertToAudio():
 def main():
     listFiles()
     userChooseFile()
-    bookInfo()    
+    bookInfo()  
+    convertToAudio()
+      
 main()
 
     

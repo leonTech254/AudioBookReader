@@ -12,6 +12,7 @@ class applicationStore:
     supportedDocuments=['.pdf','.docx']
     AvailableFiles=[]
     selectedBook=""
+    pageContents=""
     
 def listFiles():
     path=os.getcwd()
@@ -64,6 +65,7 @@ def bookInfo():
 No of pages: {color.white}{NumOfpages}{color.green}
 Page firstLine: {color.white}{firstLine}{color.green}
 fileCreation: {color.white}{fileCreationDate}{color.green}
+
 fileSize:{color.white}{filesize}MB {color.white}
      '''
      custom_output.info(summuryInfo,color.green)
@@ -74,15 +76,25 @@ fileSize:{color.white}{filesize}MB {color.white}
         if NumOfpages=='*':
             pass
         else:
-            NumOfpagesToAudio=user_input.useruput(f"Enter start page")
-        
-        
-        
+            if bool(str.isnumeric(NumOfpagesToAudio))==False:
+                custom_output.error("Invalid input")
+                bookInfo()
+            startPage= int(user_input.useruput(f"Enter start page"))
+            for i in range(int(startPage),int(NumOfpagesToAudio)):
+                content = PDF_read.getPage(i)
+                text=content.extractText()
+                applicationStore.pageContents+=text
         
         pass
      else:
         userChooseFile()
-     
+
+def convertToAudio():
+    myobj = gTTS(text=applicationStore.pageContents, lang=applicationStore.language, slow=False)
+    myobj.save("welcome.mp3")
+    os.system("mpg321 welcome.mp3")
+    
+    
      
      
 
@@ -100,6 +112,3 @@ main()
 
 # #
 # language = 'en'
-# myobj = gTTS(text=text, lang=language, slow=False)
-# myobj.save("welcome.mp3")
-# os.system("mpg321 welcome.mp3")

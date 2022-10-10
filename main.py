@@ -1,4 +1,5 @@
 
+from dataclasses import replace
 from gtts import gTTS
 from assets.leonResources import color,custom_output,user_input
 import os
@@ -46,7 +47,7 @@ def listFiles():
             # custom_output.info(f"{num-2} {currentDoc} \t\t {nextNum} {nextDoc}",color.red)
 
 def userChooseFile():
-    bookSelected=user_input.useruput("\tEnter book to conver to audio: ")    
+    bookSelected=user_input.useruput("Enter book to conver to audio: ")    
     check=str.isnumeric(bookSelected)
     if bool(check)==False:
         custom_output.error("Invalid choice")
@@ -61,20 +62,24 @@ def bookInfo():
      temp = open("./"+bookSelected, 'rb')
      PDF_read = PdfReader(temp)
      NumOfpages=len(PDF_read.pages)
-     first_page = PDF_read.getPage(0)
+     first_page = PDF_read.getPage(1)
      text=first_page.extractText()
-     firstLine=text.partition("\n")[0]
+     firstLine=text.strip("\n")
+    #  print(firstLine.replace("\n"," "))
+     firstLines=""
+     for i in firstLine:
+         firstLines+=i 
+     firstLine=firstLines.replace('\n' ,' ')         
      fileCreationDate=time.ctime(os.path.getctime("./"+bookSelected))
      filesize=os.stat("./"+bookSelected)
      filesize=filesize.st_size/(1024*1024)
      filesize=round(filesize,3)
      summuryInfo=f'''
-\t\tSelected book: {color.white}{bookSelected}{color.green}
-\t\tNo of pages: {color.white}{NumOfpages}{color.green}
-\t\tPage firstLine: {color.white}{firstLine}{color.green}
-\t\tfileCreation: {color.white}{fileCreationDate}{color.green}
-
-\t\tfileSize: {color.white}{filesize}MB {color.white}
+\tSelected book: {color.white}{bookSelected}{color.green}
+\tNo of pages: {color.white}{NumOfpages}{color.green}
+\tPage firstLine: {color.white}{firstLine}{color.green}
+\tFileCreation: {color.white}{fileCreationDate}{color.green}
+\tFileSize: {color.white}{filesize}MB {color.white}
      '''
      custom_output.info(summuryInfo,color.green)
      custom_output.info(f"{applicationStore.lines}\n",color.blue)
@@ -101,19 +106,7 @@ def convertToAudio():
     custom_output.info("converting to Audio......",color.blue)
     myobj = gTTS(text=applicationStore.pageContents, lang=applicationStore.language, slow=False)
     myobj.save(f"./mp3/{applicationStore.selectedBook}.mp3")
-    custom_output.info("[*] Audio book created successfully check mp3/{applicationStore.selectedBook}.mp3",color.green)
-    
-    
-    
-   
-    
-    
-     
-     
-
-    
-    
-    
+    custom_output.info(f"[*] Audio book created successfully check mp3/{applicationStore.selectedBook}.mp3",color.cyan)
 
 def main():
     listFiles()

@@ -31,7 +31,9 @@ def listFiles():
             currentDoc=documents[num-2]
             nextNum=num-1
             nextDoc=documents[nextNum]
-            custom_output.info(f"{num-2} {currentDoc} \t\t {nextNum} {nextDoc}",color.red)
+            custom_output.info(("{:<2} {:<50} {:<2} {:<50}".format(int(num-2),currentDoc, int(nextNum),nextDoc)),color.red)
+            
+            # custom_output.info(f"{num-2} {currentDoc} \t\t {nextNum} {nextDoc}",color.red)
 
 def userChooseFile():
     bookSelected=user_input.useruput("Enter book to conver to audio: ")    
@@ -90,9 +92,14 @@ fileSize:{color.white}{filesize}MB {color.white}
         userChooseFile()
 
 def convertToAudio():
+    custom_output.info("converting to Audio......",color.blue)
     myobj = gTTS(text=applicationStore.pageContents, lang=applicationStore.language, slow=False)
-    myobj.save("welcome.mp3")
-    os.system("mpg321 welcome.mp3")
+    myobj.save(f"./mp3/{applicationStore.selectedBook}.mp3")
+    custom_output.info("[*] Audio book created successfully check mp3/{applicationStore.selectedBook}.mp3",color.green)
+    
+    
+    
+   
     
     
      
